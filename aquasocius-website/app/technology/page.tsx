@@ -1,104 +1,287 @@
-import Section from "@/components/ui/Section";
-import SectionHeading from "@/components/ui/SectionHeading";
-import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
+import Section from "@/components/ui/Section";
+import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/effects/ScrollReveal";
+import CavitationDiagram from "@/components/diagrams/CavitationDiagramWrapper";
 
 export const metadata: Metadata = {
   title: "Technology",
-  description: "Deep dive into hydrodynamic cavitation — how Aquasocius purifies water without chemicals.",
+  description: "Hydrodynamic cavitation water purification — the science behind Aquasocius.",
 };
+
+const tableRows = [
+  {
+    feature: "Chemical additives required",
+    aq: { val: "No",       icon: "✓", type: "good" },
+    chem: { val: "Yes",      icon: "✗", type: "bad" },
+    uv:   { val: "No",       icon: "✓", type: "good" },
+    ro:   { val: "No",       icon: "✓", type: "good" },
+  },
+  {
+    feature: "Removes dissolved contaminants",
+    aq: { val: "Yes",      icon: "✓", type: "good" },
+    chem: { val: "Partial", icon: "~", type: "mid" },
+    uv:   { val: "No",      icon: "✗", type: "bad" },
+    ro:   { val: "Yes",     icon: "✓", type: "good" },
+  },
+  {
+    feature: "Destroys pathogens",
+    aq: { val: "Yes",      icon: "✓", type: "good" },
+    chem: { val: "Yes",     icon: "✓", type: "good" },
+    uv:   { val: "Yes",     icon: "✓", type: "good" },
+    ro:   { val: "No",      icon: "✗", type: "bad" },
+  },
+  {
+    feature: "Water waste generated",
+    aq: { val: "None",     icon: "✓", type: "good" },
+    chem: { val: "Moderate",icon: "✗", type: "bad" },
+    uv:   { val: "None",    icon: "✓", type: "good" },
+    ro:   { val: "High",    icon: "✗", type: "bad" },
+  },
+  {
+    feature: "Energy consumption",
+    aq: { val: "Low",      icon: "✓", type: "good" },
+    chem: { val: "Low",     icon: "✓", type: "good" },
+    uv:   { val: "Low",     icon: "✓", type: "good" },
+    ro:   { val: "High",    icon: "✗", type: "bad" },
+  },
+  {
+    feature: "Ongoing consumables",
+    aq: { val: "None",     icon: "✓", type: "good" },
+    chem: { val: "Chemicals",icon: "✗", type: "bad" },
+    uv:   { val: "UV bulbs",icon: "~", type: "mid" },
+    ro:   { val: "Membranes",icon: "✗", type: "bad" },
+  },
+  {
+    feature: "Mineral retention",
+    aq: { val: "Controlled",icon: "✓", type: "good" },
+    chem: { val: "Variable", icon: "~", type: "mid" },
+    uv:   { val: "Yes",      icon: "✓", type: "good" },
+    ro:   { val: "Stripped", icon: "✗", type: "bad" },
+  },
+];
+
+const iconColor = (type: string) =>
+  type === "good" ? "#10B981" : type === "bad" ? "#EF4444" : "#F59E0B";
 
 export default function TechnologyPage() {
   return (
     <>
-      <section className="pt-32 pb-24 px-6 bg-primary">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00D4FF] mb-3">The Science</p>
-          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-            The physics of<br /><span className="gradient-text">pure water</span>
-          </h1>
-          <p className="text-lg text-[#94A3B8] max-w-2xl">
-            {/* TODO: Final copy */}
-            Hydrodynamic cavitation is a natural phenomenon we&apos;ve engineered into a precision purification system. No chemicals. Just physics.
-          </p>
-          <div className="mt-12 rounded-card border border-white/5 bg-surface h-96 flex items-center justify-center">
-            <p className="text-[#94A3B8]">[ 3D cavitation scene — React Three Fiber ]</p>
-          </div>
+      {/* Hero */}
+      <section
+        className="relative min-h-[70vh] flex items-center px-6 pt-32 pb-20 overflow-hidden"
+        style={{ backgroundColor: "var(--primary)" }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,212,255,0.07) 0%, transparent 70%)",
+          }}
+        />
+        <div className="max-w-7xl mx-auto w-full">
+          <ScrollReveal direction="up" threshold={0.1}>
+            <div className="max-w-3xl mb-16">
+              <p
+                className="text-xs font-semibold uppercase tracking-widest mb-4"
+                style={{ color: "var(--secondary)" }}
+              >
+                The Science
+              </p>
+              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+                Hydrodynamic<br />
+                <span className="gradient-text-animated">Cavitation</span>
+              </h1>
+              <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
+                A physics-based purification process that eliminates contaminants through controlled vortex energy — no chemicals, no filters, no compromise.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Animated pipe diagram */}
+          <ScrollReveal direction="up" delay={0.2} threshold={0.1}>
+            <div
+              className="w-full rounded-card overflow-hidden"
+              style={{
+                border: "1px solid rgba(0,212,255,0.2)",
+              }}
+            >
+              <CavitationDiagram />
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      <Section className="bg-surface">
-        <SectionHeading eyebrow="How It Works" title="Cavitation explained" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <p className="text-[#94A3B8] leading-relaxed">
-              {/* TODO: Final copy */}
-              Hydrodynamic cavitation occurs when a liquid rapidly changes pressure, forming micro-bubbles that violently collapse — releasing intense localized energy.
-            </p>
-            <p className="text-[#94A3B8] leading-relaxed">
-              {/* TODO: Final copy */}
-              Aquasocius engineers this phenomenon within a precision-designed vortex chamber. The resulting energy destroys pathogens, bacteria, and contaminants at the molecular level.
-            </p>
-            <p className="text-[#94A3B8] leading-relaxed">
-              {/* TODO: Final copy */}
-              The output is so thoroughly purified that beneficial minerals must be reintroduced — a testament to the system&apos;s effectiveness.
-            </p>
-          </div>
-          <div className="rounded-card border border-white/5 bg-primary h-72 flex items-center justify-center">
-            <p className="text-[#94A3B8] text-sm">[ Animated pressure diagram ]</p>
-          </div>
-        </div>
-      </Section>
-
+      {/* What Is Cavitation */}
       <Section>
-        <SectionHeading eyebrow="Comparison" title="Cavitation vs. conventional treatment" centered />
-        <div className="overflow-x-auto mt-8">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left py-4 px-4 text-[#94A3B8] font-medium">Method</th>
-                <th className="text-center py-4 px-4 text-[#00D4FF] font-semibold">Aquasocius</th>
-                <th className="text-center py-4 px-4 text-[#94A3B8] font-medium">Chemical</th>
-                <th className="text-center py-4 px-4 text-[#94A3B8] font-medium">UV</th>
-                <th className="text-center py-4 px-4 text-[#94A3B8] font-medium">Reverse Osmosis</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16 items-start">
+          {/* Text — 3 cols */}
+          <ScrollReveal direction="up" className="md:col-span-3">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-6"
+              style={{ color: "var(--secondary)" }}
+            >
+              What Is Cavitation
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
+              The physics of<br />pure water
+            </h2>
+            <div className="flex flex-col gap-5">
               {[
-                { label: "Chemical-free",       aq: "✓", chem: "✗", uv: "✓", ro: "✓" },
-                { label: "Kills all pathogens", aq: "✓", chem: "✓", uv: "✓", ro: "~" },
-                { label: "No byproducts",        aq: "✓", chem: "✗", uv: "✓", ro: "✓" },
-                { label: "Scalable",             aq: "✓", chem: "✓", uv: "~", ro: "~" },
-                { label: "Energy efficient",     aq: "✓", chem: "✓", uv: "~", ro: "✗" },
-                { label: "Mineral-preserving",   aq: "✓", chem: "~", uv: "✓", ro: "✗" },
-              ].map((row) => (
-                <tr key={row.label} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                  <td className="py-4 px-4 text-white">{row.label}</td>
-                  <td className="py-4 px-4 text-center text-[#00D4FF] font-semibold">{row.aq}</td>
-                  <td className="py-4 px-4 text-center text-[#94A3B8]">{row.chem}</td>
-                  <td className="py-4 px-4 text-center text-[#94A3B8]">{row.uv}</td>
-                  <td className="py-4 px-4 text-center text-[#94A3B8]">{row.ro}</td>
-                </tr>
+                "When water is forced through a precisely engineered constriction at high velocity, the local pressure drops below the water's vapor pressure. This creates millions of microscopic vacuum cavities — bubbles formed not by heat, but by physics.",
+                "These cavitation bubbles are inherently unstable. As they move downstream into higher-pressure zones, they collapse violently — each implosion generating localized temperatures exceeding 4,700°C and pressures above 1,000 atmospheres.",
+                "At this scale, the energy released is sufficient to rupture cell walls, destroy bacterial membranes, and break down organic contaminants at the molecular level. The process is purely mechanical — no chemical additives enter the water at any stage.",
+                "The result is water of extraordinary purity. So pure, in fact, that essential minerals must be reintroduced post-treatment to achieve optimal composition for drinking and building system compatibility.",
+              ].map((para, i) => (
+                <p key={i} className="leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  {para}
+                </p>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </ScrollReveal>
+
+          {/* Stat cards — 2 cols */}
+          <ScrollReveal direction="up" delay={0.2} stagger={0.12} className="md:col-span-2 flex flex-col gap-4">
+            {[
+              { stat: "4,700°C",    label: "Localized collapse temperature" },
+              { stat: "1,000+ atm", label: "Implosion pressure generated"   },
+              { stat: "0 chemicals",label: "Added during purification"       },
+            ].map(({ stat, label }) => (
+              <div
+                key={stat}
+                className="glass rounded-card p-6"
+                style={{ borderColor: "rgba(0,212,255,0.1)" }}
+              >
+                <p className="text-3xl font-bold gradient-text mb-2">{stat}</p>
+                <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{label}</p>
+              </div>
+            ))}
+          </ScrollReveal>
         </div>
       </Section>
 
+      {/* Pressure Zone Diagram */}
       <Section className="bg-surface">
-        <div className="rounded-card border border-[#00D4FF]/20 bg-gradient-to-br from-[#00D4FF]/5 to-[#7B61FF]/5 p-12 text-center">
-          <p className="text-3xl md:text-4xl font-bold text-white mb-4">&ldquo;So pure, we add minerals back.&rdquo;</p>
-          <p className="text-[#94A3B8] max-w-xl mx-auto">
-            {/* TODO: Final copy */}
-            Our output exceeds drinking water standards — proving the system&apos;s effectiveness through its own thoroughness.
-          </p>
-        </div>
+        <ScrollReveal direction="up" threshold={0.1}>
+          <div className="text-center mb-10">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: "var(--secondary)" }}
+            >
+              The Process
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Three zones. One transformation.
+            </h2>
+          </div>
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.15} threshold={0.1}>
+          <CavitationDiagram />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.2} stagger={0.1} className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          {[
+            { zone: "01", title: "High Pressure Intake",    desc: "Water enters the system under controlled pressure, flowing through the intake manifold toward the cavitation chamber." },
+            { zone: "02", title: "Cavitation Zone",          desc: "Pressure drops as water passes through the engineered constriction. Millions of vacuum bubbles form instantly." },
+            { zone: "03", title: "Contaminant Destruction",  desc: "Returning pressure causes violent bubble collapse. The energy released destroys all biological and chemical contaminants." },
+          ].map(({ zone, title, desc }) => (
+            <div key={zone} className="glass rounded-card p-5">
+              <p className="font-mono text-xs mb-2" style={{ color: "var(--secondary)" }}>{zone}</p>
+              <p className="font-semibold text-white mb-2 text-sm">{title}</p>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{desc}</p>
+            </div>
+          ))}
+        </ScrollReveal>
       </Section>
 
+      {/* Comparison Table */}
       <Section>
-        <div className="text-center">
-          <Button href="/product">See the Machine</Button>
-        </div>
+        <ScrollReveal direction="up" threshold={0.1}>
+          <div className="mb-10">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: "var(--secondary)" }}
+            >
+              Comparison
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              How Aquasocius compares
+            </h2>
+          </div>
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.1} threshold={0.1}>
+          <div className="overflow-x-auto">
+            <p className="text-xs mb-3 md:hidden" style={{ color: "rgba(148,163,184,0.5)" }}>
+              Scroll → to see full table
+            </p>
+            <table className="w-full min-w-[640px] text-sm border-collapse">
+              <thead>
+                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  <th className="text-left py-4 px-4 font-medium" style={{ color: "var(--text-secondary)" }}>
+                    Feature
+                  </th>
+                  <th
+                    className="text-center py-4 px-4 font-semibold"
+                    style={{
+                      color: "var(--secondary)",
+                      borderLeft: "2px solid rgba(0,212,255,0.3)",
+                      backgroundColor: "rgba(0,212,255,0.03)",
+                    }}
+                  >
+                    Aquasocius
+                  </th>
+                  <th className="text-center py-4 px-4 font-medium" style={{ color: "var(--text-secondary)" }}>Chemical</th>
+                  <th className="text-center py-4 px-4 font-medium" style={{ color: "var(--text-secondary)" }}>UV</th>
+                  <th className="text-center py-4 px-4 font-medium" style={{ color: "var(--text-secondary)" }}>Reverse Osmosis</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((row) => (
+                  <tr
+                    key={row.feature}
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+                  >
+                    <td className="py-4 px-4 text-white">{row.feature}</td>
+                    {[row.aq, row.chem, row.uv, row.ro].map((cell, i) => (
+                      <td
+                        key={i}
+                        className="py-4 px-4 text-center"
+                        style={
+                          i === 0
+                            ? {
+                                borderLeft: "2px solid rgba(0,212,255,0.3)",
+                                backgroundColor: "rgba(0,212,255,0.03)",
+                              }
+                            : {}
+                        }
+                      >
+                        <span style={{ color: iconColor(cell.type), fontWeight: 600 }}>
+                          {cell.icon}
+                        </span>
+                        <span className="ml-2" style={{ color: "var(--text-secondary)", fontSize: "12px" }}>
+                          {cell.val}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </ScrollReveal>
+      </Section>
+
+      {/* Technology CTA */}
+      <Section className="bg-surface">
+        <ScrollReveal direction="up" threshold={0.2}>
+          <div className="text-center">
+            <p className="text-2xl md:text-3xl font-bold text-white mb-6">
+              See the machine that makes it possible
+            </p>
+            <Button href="/product">
+              Explore the Product →
+            </Button>
+          </div>
+        </ScrollReveal>
       </Section>
     </>
   );
