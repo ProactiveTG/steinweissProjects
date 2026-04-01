@@ -1,11 +1,12 @@
 import Link from "next/link";
+import LogoFull from "@/components/brand/LogoFull";
 
 const footerLinks = [
-  { href: "/technology", label: "Technology" },
-  { href: "/product",    label: "Product"    },
-  { href: "/markets",    label: "Markets"    },
-  { href: "/about",      label: "About"      },
-  { href: "/contact",    label: "Contact"    },
+  { href: "/technology/", label: "Technology" },
+  { href: "/product/",    label: "Product"    },
+  { href: "/markets/",    label: "Markets"    },
+  { href: "/about/",      label: "About"      },
+  { href: "/contact/",    label: "Contact"    },
 ];
 
 export default function Footer() {
@@ -15,9 +16,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
-            <p className="text-xl font-bold text-white mb-3">Aquasocius</p>
+            <div className="mb-3">
+              <LogoFull size="sm" />
+            </div>
             <p className="text-[#94A3B8] text-sm leading-relaxed max-w-xs">
-              {/* TODO: Final copy */}
               Hydrodynamic cavitation water purification. No chemicals. Pure output.
             </p>
           </div>
@@ -47,7 +49,6 @@ export default function Footer() {
               Contact
             </p>
             <p className="text-sm text-[#94A3B8]">
-              {/* TODO: Final contact info */}
               New York, NY
               <br />
               Zürich, Switzerland

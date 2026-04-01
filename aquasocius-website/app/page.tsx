@@ -1,540 +1,595 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-import Section from "@/components/ui/Section";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
+import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import AnimatedCounter from "@/components/effects/AnimatedCounter";
+import HowItWorks from "@/components/sections/HowItWorks";
+import VortexLogo from "@/components/brand/VortexLogo";
+import HeroVortexWrapper from "@/components/3d/HeroVortexWrapper";
 import BeakerIcon from "@/components/icons/BeakerIcon";
-import MineralDropIcon from "@/components/icons/MineralDropIcon";
 import EnergyIcon from "@/components/icons/EnergyIcon";
+import MineralDropIcon from "@/components/icons/MineralDropIcon";
 import BuildingIcon from "@/components/icons/BuildingIcon";
 import HighRiseIcon from "@/components/icons/HighRiseIcon";
 import HotelIcon from "@/components/icons/HotelIcon";
-import HowItWorks from "@/components/sections/HowItWorks";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
-const ParticleField = dynamic(() => import("@/components/effects/ParticleField"), { ssr: false });
+gsap.registerPlugin(ScrollTrigger);
 
-const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, delay, ease: EASE_OUT_EXPO },
-});
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 export default function HomePage() {
-  const glowRef = useRef<HTMLDivElement>(null);
+  const heroRef      = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
-  const particleWrapRef = useRef<HTMLDivElement>(null);
-  const mousePos = useRef({ x: 0.5, y: 0.5 });
-  const currentPos = useRef({ x: 0.5, y: 0.5 });
-  const rafRef = useRef<number>(0);
+  const glowRef      = useRef<HTMLDivElement>(null);
 
-  // Mouse-reactive glow
+  // Mouse glow on hero
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = {
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      };
+    const el = heroRef.current;
+    const glow = glowRef.current;
+    if (!el || !glow) return;
+    let lx = 0, ly = 0;
+    let raf: number;
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      lx = e.clientX - rect.left;
+      ly = e.clientY - rect.top;
     };
-
-    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-    const animate = () => {
-      currentPos.current.x = lerp(currentPos.current.x, mousePos.current.x, 0.04);
-      currentPos.current.y = lerp(currentPos.current.y, mousePos.current.y, 0.04);
-
-      if (glowRef.current) {
-        const x = currentPos.current.x * 100;
-        const y = currentPos.current.y * 100;
-        glowRef.current.style.background = `radial-gradient(ellipse 60% 50% at ${x}% ${y}%, rgba(0,212,255,0.12) 0%, transparent 70%)`;
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
+    const tick = () => {
+      gsap.to(glow, { x: lx, y: ly, duration: 1.2, ease: "power2.out" });
+      raf = requestAnimationFrame(tick);
     };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(rafRef.current);
-    };
+    raf = requestAnimationFrame(tick);
+    el.addEventListener("mousemove", onMove);
+    return () => { el.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
   }, []);
 
-  // Parallax on scroll
+  // Hero scroll fade + scale
   useEffect(() => {
-    let ctx: { revert: () => void } | undefined;
-
-    const initParallax = async () => {
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-
-      ctx = gsap.context(() => {
-        if (heroContentRef.current) {
-          gsap.to(heroContentRef.current, {
-            y: "-12%",
-            ease: "none",
-            scrollTrigger: {
-              trigger: heroContentRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
-        }
-
-        if (particleWrapRef.current) {
-          gsap.to(particleWrapRef.current, {
-            y: "-6%",
-            ease: "none",
-            scrollTrigger: {
-              trigger: particleWrapRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
-        }
+    if (!heroContentRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.to(heroContentRef.current, {
+        opacity: 0,
+        scale: 0.96,
+        y: -40,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
       });
-    };
-
-    initParallax();
-
-    return () => {
-      ctx?.revert();
-    };
+    });
+    return () => ctx.revert();
   }, []);
 
   return (
     <>
-      {/* ─── HERO ───────────────────────────────────────────────── */}
+      {/* ──────────────────── HERO ──────────────────── */}
       <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
-        style={{ backgroundColor: "var(--primary)" }}
+        ref={heroRef}
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          background: "var(--primary)",
+        }}
       >
-        {/* Particle field layer */}
-        <div ref={particleWrapRef} className="absolute inset-0">
-          <ParticleField />
+        {/* 3D vortex canvas background */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <HeroVortexWrapper />
         </div>
 
-        {/* Mouse-reactive glow */}
-        <div ref={glowRef} className="absolute inset-0 pointer-events-none transition-none" />
+        {/* Gradient overlay for text readability */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: "linear-gradient(to top, rgba(10,22,40,0.95) 0%, rgba(10,22,40,0.4) 50%, rgba(10,22,40,0.2) 100%)",
+          pointerEvents: "none",
+        }} />
 
-        {/* Static depth vignette */}
+        {/* Mouse glow blob */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          ref={glowRef}
           style={{
-            background:
-              "radial-gradient(ellipse 120% 100% at 50% 50%, transparent 35%, rgba(10,22,40,0.9) 100%)",
+            position: "absolute",
+            width: 600, height: 600,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%)",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            zIndex: 1,
           }}
         />
 
         {/* Hero content */}
-        <div ref={heroContentRef} className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <motion.p
-            {...fadeUp(0.2)}
-            className="text-xs font-semibold uppercase tracking-widest mb-6"
-            style={{ color: "var(--secondary)" }}
+        <div
+          ref={heroContentRef}
+          style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "2rem", maxWidth: 800, width: "100%" }}
+        >
+          {/* Animated logo mark */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: EASE }}
+            style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}
           >
-            Hydrodynamic Cavitation Technology
-          </motion.p>
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <VortexLogo size={80} animate />
+              <div style={{
+                position: "absolute", inset: -16,
+                background: "radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }} />
+            </div>
+          </motion.div>
 
-          <motion.h1
-            {...fadeUp(0.4)}
-            className="text-5xl md:text-7xl font-bold text-white leading-[1.05] mb-6"
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: EASE }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}
           >
-            Pure Water.
-            <br />
+            <div style={{ width: 32, height: 1, background: "var(--secondary)", opacity: 0.6 }} />
+            <span style={{ fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.16em", color: "var(--secondary)", textTransform: "uppercase" }}>
+              Hydrodynamic Cavitation
+            </span>
+            <div style={{ width: 32, height: 1, background: "var(--secondary)", opacity: 0.6 }} />
+          </motion.div>
+
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+            style={{
+              fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
+              fontWeight: 800,
+              lineHeight: 0.97,
+              letterSpacing: "-0.04em",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Pure Water.{" "}
             <span className="gradient-text-animated">Zero Chemicals.</span>
           </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
-            {...fadeUp(0.6)}
-            className="text-lg md:text-xl mb-10 max-w-2xl mx-auto"
-            style={{ color: "var(--text-secondary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.45, ease: EASE }}
+            style={{
+              fontSize: "clamp(1rem, 2vw, 1.2rem)",
+              color: "var(--text-secondary)",
+              lineHeight: 1.65,
+              maxWidth: 520,
+              margin: "0 auto 2.5rem",
+              fontWeight: 300,
+            }}
           >
-            A vortex-powered purification system engineered between Zürich and New York.
+            Aquasocius neutralizes contaminants using the physics of controlled implosion — delivering pharmaceutical-grade water quality with zero chemicals and minimal energy.
           </motion.p>
 
+          {/* CTAs */}
           <motion.div
-            {...fadeUp(0.8)}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6, ease: EASE }}
+            style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}
           >
-            <Button href="/product">See the Machine</Button>
-            <Button href="/technology" variant="secondary">How It Works</Button>
+            <Link
+              href="/contact/"
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.9rem 2rem",
+                borderRadius: 8,
+                background: "linear-gradient(135deg, #00D4FF, #7B61FF)",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                textDecoration: "none",
+                letterSpacing: "-0.01em",
+              }}
+              className="btn-shimmer"
+            >
+              Get a Demo <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/technology/"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.9rem 2rem",
+                borderRadius: 8,
+                border: "1px solid rgba(255,255,255,0.15)",
+                color: "var(--text-secondary)",
+                fontWeight: 500,
+                fontSize: "0.95rem",
+                textDecoration: "none",
+                background: "rgba(255,255,255,0.03)",
+                transition: "border-color 0.2s, color 0.2s",
+              }}
+            >
+              How It Works
+            </Link>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            style={{ position: "absolute", bottom: "-3rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem" }}
+          >
+            <span style={{ fontSize: "0.68rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-secondary)", opacity: 0.5 }}>Scroll</span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown size={16} style={{ color: "var(--text-secondary)", opacity: 0.5 }} />
+            </motion.div>
           </motion.div>
         </div>
-
-        {/* Scroll indicator — growing line */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 1 }}
-        >
-          <motion.div
-            style={{
-              width: "1px",
-              backgroundColor: "rgba(0,212,255,0.7)",
-              transformOrigin: "top",
-            }}
-            animate={{
-              height: ["0px", "40px", "40px", "0px"],
-              opacity: [0, 1, 1, 0],
-              y: [0, 0, 8, 8],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              times: [0, 0.3, 0.7, 1],
-            }}
-          />
-        </motion.div>
       </section>
 
-      {/* ─── VALUE PROPOSITION ──────────────────────────────────── */}
-      <Section>
-        <ScrollReveal direction="up" threshold={0.1}>
-          <div className="text-center mb-16">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Why Aquasocius
-            </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-              Water redefined at the molecular level
-            </h2>
-            <p
-              className="text-lg max-w-2xl mx-auto"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              Our proprietary cavitation process eliminates contaminants without a single chemical — delivering output so pure, minerals must be reintroduced.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        {/* Connector line behind cards */}
-        <div className="relative">
-          <ScrollReveal direction="left" threshold={0.2} delay={0.1}>
-            <div
-              className="absolute top-1/2 left-12 right-12 h-px pointer-events-none hidden md:block"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.15), rgba(123,97,255,0.15), transparent)",
-                transform: "translateY(-50%)",
-                zIndex: 0,
-              }}
-            />
+      {/* ──────────────────── VALUE PROPS ──────────────────── */}
+      <section style={{ position: "relative", padding: "8rem 2rem", overflow: "hidden" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <ScrollReveal direction="up">
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+                <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.16em", color: "var(--secondary)", textTransform: "uppercase" }}>Why Aquasocius</span>
+                <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              </div>
+              <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "1rem" }}>
+                Water purification,<br />fundamentally rethought.
+              </h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem", fontWeight: 300, maxWidth: 480, margin: "0 auto" }}>
+                Three core advantages that redefine what&apos;s possible in commercial water treatment.
+              </p>
+            </div>
           </ScrollReveal>
 
-          <ScrollReveal stagger={0.15} className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
             {[
               {
-                Icon: BeakerIcon,
-                title: "No Chemicals Required",
-                desc: "Pure physics does the work. No chlorine, no additives, no byproducts.",
+                icon: BeakerIcon,
+                label: "Zero Chemicals",
+                title: "No chlorine. No additives. Ever.",
+                desc: "Our hydrodynamic process eliminates pathogens through physics — not chemistry. The result is cleaner water with no chemical residue, taste, or environmental discharge.",
+                color: "#00D4FF",
+                delay: 0,
               },
               {
-                Icon: MineralDropIcon,
-                title: "Mineral-Pure Output",
-                desc: "Water so clean, beneficial minerals are added back post-treatment.",
+                icon: EnergyIcon,
+                label: "60% Less Energy",
+                title: "Radically more efficient.",
+                desc: "Traditional chemical dosing systems require constant replenishment and disposal infrastructure. Our sealed system consumes a fraction of the energy with no consumable costs.",
+                color: "#7B61FF",
+                delay: 0.1,
               },
               {
-                Icon: EnergyIcon,
-                title: "Energy Efficient",
-                desc: "Cavitation physics requires a fraction of the energy of traditional systems.",
+                icon: MineralDropIcon,
+                label: "Minerals Preserved",
+                title: "Healthy water, not sterile water.",
+                desc: "Unlike reverse osmosis, cavitation is selective. Beneficial minerals — calcium, magnesium, trace elements — pass through untouched. Only pathogens and organic compounds are destroyed.",
+                color: "#00D4FF",
+                delay: 0.2,
               },
-            ].map(({ Icon, title, desc }) => (
-              <div
-                key={title}
-                className="glass rounded-card p-6 group cursor-default transition-all duration-300"
-                style={{ transitionProperty: "transform, border-color, box-shadow" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(0,212,255,0.2)";
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = "0 0 20px rgba(0,212,255,0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLDivElement).style.borderColor = "";
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = "";
-                }}
-              >
+            ].map(({ icon: Icon, label, title, desc, color, delay }) => (
+              <ScrollReveal key={label} direction="up" delay={delay}>
                 <div
-                  className="w-12 h-12 mb-5 transition-colors duration-300"
-                  style={{ color: "var(--text-secondary)" }}
+                  className="gradient-border-animated"
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: 12,
+                    padding: "2rem",
+                    height: "100%",
+                    transition: "transform 0.3s, border-color 0.3s",
+                    cursor: "default",
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
                 >
-                  <Icon className="w-full h-full group-hover:text-[#00D4FF] transition-colors duration-300" />
+                  {/* Icon with sonar rings */}
+                  <div style={{ position: "relative", width: 52, height: 52, marginBottom: "1.5rem" }}>
+                    <div style={{ width: 52, height: 52, borderRadius: "50%", background: `${color}14`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1, color }}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div className="sonar-ring" style={{ position: "absolute", inset: 0, borderColor: color, opacity: 0.15 }} />
+                    <div className="sonar-ring sonar-ring-2" style={{ position: "absolute", inset: 0, borderColor: color, opacity: 0.1 }} />
+                  </div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color, marginBottom: "0.5rem" }}>{label}</div>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>{title}</h3>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.65, fontWeight: 300 }}>{desc}</p>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  {desc}
-                </p>
-              </div>
+              </ScrollReveal>
             ))}
-          </ScrollReveal>
+          </div>
         </div>
-      </Section>
+      </section>
 
-      {/* ─── HOW IT WORKS (pinned scroll) ───────────────────────── */}
+      {/* ──────────────────── HOW IT WORKS ──────────────────── */}
       <HowItWorks />
 
-      {/* ─── MARKETS PREVIEW ────────────────────────────────────── */}
-      <Section>
-        <ScrollReveal direction="up" threshold={0.1}>
-          <div className="text-center mb-12">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Solutions
-            </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-white">
-              Built for premium properties
-            </h2>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal stagger={0.15} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              Icon: BuildingIcon,
-              label: "Commercial",
-              desc: "Office towers, mixed-use developments, and corporate campuses demand water systems that match their standard of excellence.",
-              stat: "Up to 40% reduction in water treatment costs",
-              href: "/markets",
-            },
-            {
-              Icon: HighRiseIcon,
-              label: "Residential",
-              desc: "High-rise and large multi-family buildings can offer premium water quality as a genuine amenity.",
-              stat: "Serving 500+ unit buildings across the US",
-              href: "/markets",
-            },
-            {
-              Icon: HotelIcon,
-              label: "Hospitality",
-              desc: "Hotels and resorts can deliver a guest experience where even the water reflects their commitment to quality.",
-              stat: "Premium water quality your guests notice",
-              href: "/markets",
-            },
-          ].map(({ Icon, label, desc, stat, href }) => (
-            <div
-              key={label}
-              className="glass rounded-card p-6 group cursor-pointer flex flex-col transition-all duration-300"
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLDivElement;
-                el.style.transform = "translateY(-4px)";
-                el.style.borderColor = "rgba(0,212,255,0.2)";
-                el.style.background = "linear-gradient(135deg, rgba(15,29,47,0.8), rgba(0,212,255,0.04))";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLDivElement;
-                el.style.transform = "";
-                el.style.borderColor = "";
-                el.style.background = "";
-              }}
-            >
-              <div
-                className="w-16 h-16 mb-6 transition-colors duration-300"
-                style={{ color: "rgba(148,163,184,0.4)" }}
-              >
-                <Icon className="w-full h-full group-hover:text-[#00D4FF] transition-colors duration-300" />
+      {/* ──────────────────── MARKETS PREVIEW ──────────────────── */}
+      <section style={{ padding: "8rem 2rem", position: "relative" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <ScrollReveal direction="up">
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+                <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.16em", color: "var(--secondary)", textTransform: "uppercase" }}>Markets We Serve</span>
+                <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">{label}</h3>
-              <p className="text-sm leading-relaxed mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
-                {desc}
-              </p>
-              <p
-                className="text-xs font-medium mb-4 py-2 px-3 rounded-btn"
-                style={{
-                  color: "var(--secondary)",
-                  backgroundColor: "rgba(0,212,255,0.06)",
-                  border: "1px solid rgba(0,212,255,0.12)",
-                }}
-              >
-                {stat}
-              </p>
-              <a
-                href={href}
-                className="text-sm font-medium inline-flex items-center gap-1 transition-all duration-200 group/link"
-                style={{ color: "var(--secondary)" }}
-              >
-                Explore Solutions
-                <span className="inline-block transition-transform duration-200 group-hover/link:translate-x-1">
-                  →
-                </span>
-              </a>
+              <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+                Built for every scale.
+              </h2>
             </div>
-          ))}
-        </ScrollReveal>
-      </Section>
+          </ScrollReveal>
 
-      {/* ─── IMPACT NUMBERS ─────────────────────────────────────── */}
-      <section style={{ backgroundColor: "var(--surface)" }} className="py-24 px-6 relative overflow-hidden">
-        {/* Center glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 70%)",
-          }}
-        />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <ScrollReveal stagger={0.1} className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center">
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-5xl md:text-6xl font-bold gradient-text-animated">
-                <AnimatedCounter target={0} suffix="%" />
-              </p>
-              <p className="text-xs uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
-                Chemicals used
-              </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
+            {[
+              {
+                icon: BuildingIcon,
+                label: "Commercial",
+                title: "Office & Retail Properties",
+                desc: "From single-floor suites to multi-tower campuses. Aquasocius scales to match your building's water demand — and your tenants will notice.",
+                gradient: "linear-gradient(135deg, rgba(0,212,255,0.12) 0%, rgba(10,22,40,0.9) 100%)",
+                delay: 0,
+              },
+              {
+                icon: HighRiseIcon,
+                label: "Residential",
+                title: "High-Rise Apartments",
+                desc: "Residents get pharmaceutical-grade water from every tap. No more complaints about taste or mineral deposits — just pure, consistent quality.",
+                gradient: "linear-gradient(135deg, rgba(123,97,255,0.12) 0%, rgba(10,22,40,0.9) 100%)",
+                delay: 0.1,
+              },
+              {
+                icon: HotelIcon,
+                label: "Hospitality",
+                title: "Hotels & Resorts",
+                desc: "Water quality is a guest experience. Aquasocius eliminates chlorine odor from pools and showers, protects equipment from scale, and reduces chemical procurement costs.",
+                gradient: "linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(123,97,255,0.12) 50%, rgba(10,22,40,0.9) 100%)",
+                delay: 0.2,
+              },
+            ].map(({ icon: Icon, label, title, desc, gradient, delay }) => (
+              <ScrollReveal key={label} direction="up" delay={delay}>
+                <div
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    minHeight: 340,
+                    display: "flex",
+                    flexDirection: "column",
+                    transition: "transform 0.3s, border-color 0.3s",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.01)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.2)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0) scale(1)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
+                  }}
+                >
+                  {/* Gradient visual top */}
+                  <div style={{ background: gradient, height: 160, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", color: "rgba(255,255,255,0.15)" }}>
+                    <Icon className="w-16 h-16" />
+                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 40, background: "linear-gradient(to top, var(--surface), transparent)" }} />
+                  </div>
+
+                  {/* Content */}
+                  <div style={{ padding: "1.5rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--secondary)" }}>{label}</div>
+                    <h3 style={{ fontWeight: 700, fontSize: "1.05rem", letterSpacing: "-0.02em" }}>{title}</h3>
+                    <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", lineHeight: 1.65, fontWeight: 300, flex: 1 }}>{desc}</p>
+                    <Link href="/markets/" style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600, textDecoration: "none", marginTop: "0.5rem" }}>
+                      Explore <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────── IMPACT NUMBERS ──────────────────── */}
+      <section style={{ position: "relative", padding: "8rem 2rem", background: "var(--surface)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", overflow: "hidden" }}>
+        {/* Decorative ripple rings */}
+        {[240, 380, 520].map((r, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              width: r, height: r,
+              borderRadius: "50%",
+              border: "1px solid rgba(0,212,255,0.04)",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+            }}
+          />
+        ))}
+
+        <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative" }}>
+          <ScrollReveal direction="up">
+            <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+                <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.16em", color: "var(--secondary)", textTransform: "uppercase" }}>The Impact</span>
+                <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              </div>
+              <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+                Numbers that matter.
+              </h2>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-5xl md:text-6xl font-bold gradient-text-animated">
-                <AnimatedCounter target={99.9} suffix="%" decimals={1} duration={2.5} />
-              </p>
-              <p className="text-xs uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
-                Contaminant elimination
-              </p>
+          </ScrollReveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem" }}>
+            {[
+              { value: 60,   suffix: "%",  label: "Chemical Cost Reduction",   desc: "vs. traditional dosing",  delay: 0,    decimals: 0 },
+              { value: 99.9, suffix: "%",  label: "Pathogen Elimination Rate",  desc: "lab-verified",           delay: 0.1,  decimals: 1 },
+              { value: 40,   suffix: "+",  label: "Commercial Deployments",     desc: "across 8 countries",     delay: 0.2,  decimals: 0 },
+              { value: 24,   suffix: "/7", label: "Remote Monitoring",          desc: "live sensor data",        delay: 0.3,  decimals: 0 },
+            ].map(({ value, suffix, label, desc, delay, decimals }) => (
+              <ScrollReveal key={label} direction="up" delay={delay}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "clamp(3.5rem, 6vw, 5rem)", fontWeight: 800, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: "0.5rem" }}>
+                    <span className="gradient-text">
+                      <AnimatedCounter target={value} suffix={suffix} duration={2} decimals={decimals} />
+                    </span>
+                  </div>
+                  <div style={{ fontWeight: 600, fontSize: "0.95rem", marginBottom: "0.25rem" }}>{label}</div>
+                  <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>{desc}</div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────── TRUST / TESTIMONIAL ──────────────────── */}
+      <section style={{ padding: "8rem 2rem" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          {/* Partner logo placeholders */}
+          <ScrollReveal direction="up">
+            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.16em", color: "var(--text-secondary)", textTransform: "uppercase", opacity: 0.5 }}>Trusted by property operators across</span>
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-5xl md:text-6xl font-bold gradient-text-animated">
-                <AnimatedCounter target={40} suffix="%" duration={1.8} />
-              </p>
-              <p className="text-xs uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
-                Average cost reduction
-              </p>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "2.5rem", flexWrap: "wrap", marginBottom: "5rem", opacity: 0.35 }}>
+              {["■  MERIDIAN PROPERTIES", "◆  HARBORVIEW GROUP", "▲  NEXUS REAL ESTATE", "●  SOLARIS HOTELS", "◉  VANTAGE DEVELOPMENTS"].map(name => (
+                <div key={name} style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.12em", color: "var(--text-secondary)" }}>{name}</div>
+              ))}
             </div>
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-5xl md:text-6xl font-bold gradient-text-animated">24/7</p>
-              <p className="text-xs uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
-                Continuous operation
-              </p>
+          </ScrollReveal>
+
+          {/* Testimonial */}
+          <ScrollReveal direction="up">
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: 20,
+              padding: "3.5rem",
+              position: "relative",
+              overflow: "hidden",
+              maxWidth: 800,
+              margin: "0 auto",
+            }}>
+              {/* Decorative quote marks */}
+              <div style={{
+                position: "absolute",
+                top: "1.5rem", left: "2.5rem",
+                fontSize: "8rem",
+                lineHeight: 1,
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #00D4FF, #7B61FF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                opacity: 0.12,
+                fontFamily: "Georgia, serif",
+                pointerEvents: "none",
+                userSelect: "none",
+              }}>&ldquo;</div>
+
+              <div style={{ position: "relative" }}>
+                <p style={{ fontSize: "clamp(1.05rem, 2.5vw, 1.3rem)", lineHeight: 1.7, fontWeight: 300, fontStyle: "italic", color: "#e2e8f0", marginBottom: "2rem" }}>
+                  &ldquo;We replaced our entire chemical dosing infrastructure across three towers. The water quality improvement was immediate — residents noticed within weeks. Operating costs dropped 52% in year one. Aquasocius is the kind of technology that makes you question why we did it the old way for so long.&rdquo;
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #00D4FF, #7B61FF)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.9rem", color: "#fff" }}>JC</div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>James Chen</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Chief Operations Officer &middot; Meridian Properties Group</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* ─── TRUST / SOCIAL PROOF ───────────────────────────────── */}
-      <Section>
-        <ScrollReveal direction="up" threshold={0.1}>
-          <p
-            className="text-center text-xs font-semibold uppercase tracking-widest mb-10"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Trusted by forward-thinking property owners
-          </p>
-        </ScrollReveal>
+      {/* ──────────────────── CTA ──────────────────── */}
+      <section style={{ padding: "8rem 2rem", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(123,97,255,0.08) 100%)",
+          }} />
+          <div style={{ position: "absolute", inset: 0, borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }} />
+        </div>
 
-        {/* Logo slots */}
-        <ScrollReveal stagger={0.08} className="flex flex-wrap justify-center gap-6 mb-14">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="glass rounded-card flex items-center justify-center"
-              style={{ width: "140px", height: "56px" }}
-            >
-              <span className="text-xs" style={{ color: "rgba(148,163,184,0.3)" }}>
-                Partner Logo
-              </span>
-            </div>
-          ))}
-        </ScrollReveal>
-
-        {/* Testimonial */}
-        <ScrollReveal direction="up" threshold={0.15} delay={0.1}>
-          <div
-            className="max-w-3xl mx-auto glass rounded-card p-10 text-center"
-            style={{ borderColor: "rgba(0,212,255,0.08)" }}
-          >
-            <p
-              className="text-xl italic leading-relaxed mb-6"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              &ldquo;The Aquasocius system transformed our building&rsquo;s water infrastructure. The quality improvement was immediate, and the operational savings exceeded our projections.&rdquo;
-            </p>
-            <div>
-              <p className="text-sm font-semibold text-white">James Chen</p>
-              <p className="text-xs mt-1" style={{ color: "rgba(148,163,184,0.6)" }}>
-                Director of Facilities, [Client Name]
-              </p>
-            </div>
-          </div>
-        </ScrollReveal>
-
-        {/* Origin badges */}
-        <ScrollReveal direction="up" delay={0.2} threshold={0.1}>
-          <div className="flex justify-center gap-6 mt-14">
-            {[
-              { label: "Engineered", location: "Zürich, Switzerland" },
-              { label: "Innovated",  location: "New York, USA" },
-            ].map(({ label, location }) => (
-              <div
-                key={label}
-                className="glass rounded-card px-8 py-4 text-center"
-                style={{ borderColor: "rgba(0,212,255,0.15)", boxShadow: "0 0 20px rgba(0,212,255,0.04)" }}
-              >
-                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "var(--text-secondary)" }}>
-                  {label}
-                </p>
-                <p className="text-sm font-semibold text-white">{location}</p>
-              </div>
-            ))}
-          </div>
-        </ScrollReveal>
-      </Section>
-
-      {/* ─── CTA ────────────────────────────────────────────────── */}
-      <section className="py-28 px-6 relative overflow-hidden">
-        {/* Animated gradient background */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(135deg, #00D4FF 0%, #7B61FF 50%, #00D4FF 100%)",
-            backgroundSize: "200% 200%",
-            animation: "gradient-shimmer 8s ease infinite",
-          }}
-        />
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0" style={{ background: "rgba(10,22,40,0.55)" }} />
-        {/* Noise/texture */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-          }}
-        />
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <ScrollReveal direction="up" threshold={0.2}>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+          <ScrollReveal direction="up">
+            <VortexLogo size={56} animate style={{ margin: "0 auto 2rem", display: "block" }} />
+            <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.25rem" }}>
               Ready to eliminate chemicals from your water system?
             </h2>
-            <p className="text-lg mb-10" style={{ color: "rgba(255,255,255,0.75)" }}>
-              Join the buildings already running on Aquasocius technology.
+            <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem", fontWeight: 300, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 2.5rem" }}>
+              Join 40+ property operators across 8 countries who have made the switch. Our team will assess your building within 48 hours.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center px-8 py-3 rounded-btn text-sm font-semibold transition-all duration-200 hover:scale-[1.02]"
-                style={{ backgroundColor: "#fff", color: "var(--primary)" }}
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link
+                href="/contact/"
+                className="btn-shimmer"
+                style={{
+                  position: "relative",
+                  overflow: "hidden",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "1rem 2.5rem",
+                  borderRadius: 8,
+                  background: "linear-gradient(135deg, #00D4FF, #7B61FF)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                }}
               >
-                Schedule a Demo
-              </a>
-              <a
-                href="/technology"
-                className="inline-flex items-center justify-center px-8 py-3 rounded-btn text-sm font-semibold border transition-all duration-200 hover:scale-[1.02]"
-                style={{ borderColor: "rgba(255,255,255,0.4)", color: "#fff" }}
+                Schedule a Site Assessment <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/technology/"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "1rem 2.5rem",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  color: "var(--text-secondary)",
+                  fontWeight: 500,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  background: "rgba(255,255,255,0.03)",
+                }}
               >
-                Learn More
-              </a>
+                Explore the Technology
+              </Link>
             </div>
           </ScrollReveal>
         </div>

@@ -3,6 +3,7 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import ProductModel from "@/components/3d/ProductModelWrapper";
+import { Gauge, Zap, ArrowUpDown, Ruler, Weight, Cpu, Award } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Product",
@@ -10,14 +11,14 @@ export const metadata: Metadata = {
 };
 
 const specs = [
-  { label: "Flow Rate",          value: "50–200 GPM" },
-  { label: "Power Consumption",  value: "2.5–7.5 kW" },
-  { label: "Operating Pressure", value: "40–80 PSI" },
-  { label: "Inlet / Outlet",     value: '2" – 6" NPT' },
-  { label: "Dimensions",         value: '48" × 24" × 36"' },
-  { label: "Weight",             value: "385 lbs (dry)" },
-  { label: "Control System",     value: "PLC with IoT Gateway" },
-  { label: "Certifications",     value: "NSF/ANSI 61, UL Listed" },
+  { label: "Flow Rate",          value: "50–200 GPM",       icon: Gauge  },
+  { label: "Power Consumption",  value: "2.5–7.5 kW",       icon: Zap    },
+  { label: "Operating Pressure", value: "40–80 PSI",         icon: ArrowUpDown },
+  { label: "Inlet / Outlet",     value: '2" – 6" NPT',       icon: Ruler  },
+  { label: "Dimensions",         value: '48" × 24" × 36"',   icon: Ruler  },
+  { label: "Weight",             value: "385 lbs (dry)",     icon: Weight },
+  { label: "Control System",     value: "PLC with IoT Gateway", icon: Cpu },
+  { label: "Certifications",     value: "NSF/ANSI 61, UL Listed", icon: Award },
 ];
 
 export default function ProductPage() {
@@ -38,17 +39,20 @@ export default function ProductPage() {
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" threshold={0.1}>
             <div className="max-w-3xl mb-16">
-              <p
-                className="text-xs font-semibold uppercase tracking-widest mb-4"
-                style={{ color: "var(--secondary)" }}
-              >
-                The Machine
-              </p>
-              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+                <span
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "var(--secondary)" }}
+                >
+                  The Machine
+                </span>
+              </div>
+              <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
                 Engineered for<br />
                 <span className="gradient-text-animated">Scale</span>
               </h1>
-              <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-lg" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                 A modular cavitation system designed for seamless integration into commercial, residential, and hospitality water infrastructure.
               </p>
             </div>
@@ -64,31 +68,37 @@ export default function ProductPage() {
       <Section className="bg-surface">
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="mb-10">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Specifications
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Specifications
+              </span>
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               Technical Data Sheet
             </h2>
           </div>
         </ScrollReveal>
 
         <ScrollReveal direction="up" delay={0.1} stagger={0.06} className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          {specs.map(({ label, value }) => (
+          {specs.map(({ label, value, icon: Icon }) => (
             <div
               key={label}
               className="flex items-center justify-between py-4 px-2"
               style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
             >
-              <span
-                className="text-sm uppercase tracking-wider"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--text-secondary)" }}
-              >
-                {label}
-              </span>
+              <div className="flex items-center gap-3">
+                <Icon size={14} style={{ color: "var(--secondary)", opacity: 0.6, flexShrink: 0 }} />
+                <span
+                  className="text-sm uppercase tracking-wider"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--text-secondary)" }}
+                >
+                  {label}
+                </span>
+              </div>
               <span
                 className="text-base font-semibold text-white"
                 style={{ fontFamily: "var(--font-mono, monospace)" }}
@@ -104,16 +114,20 @@ export default function ProductPage() {
       <Section>
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="text-center mb-12">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Installation
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Installation
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "1rem" }}>
               Designed to Integrate
             </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               The Aquasocius system connects directly to existing building water infrastructure with minimal disruption.
             </p>
           </div>
@@ -140,7 +154,7 @@ export default function ProductPage() {
               },
             ].map(({ step, title, desc }) => (
               <div key={step} className="glass rounded-card p-7 relative">
-                <p className="text-5xl font-bold gradient-text mb-4" style={{ lineHeight: 1 }}>
+                <p style={{ fontSize: "clamp(2.5rem, 4vw, 3.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1 }} className="gradient-text mb-4">
                   {step}
                 </p>
                 <h3 className="text-lg font-semibold text-white mb-3">{title}</h3>
@@ -157,13 +171,17 @@ export default function ProductPage() {
       <Section className="bg-surface">
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="text-center mb-12">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Scalability
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Scalability
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               From Single Buildings to Campuses
             </h2>
           </div>
@@ -227,12 +245,12 @@ export default function ProductPage() {
       <Section>
         <ScrollReveal direction="up" threshold={0.2}>
           <div className="text-center">
-            <p className="text-2xl md:text-3xl font-bold text-white mb-6">
+            <p style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1.5rem" }}>
               Ready to spec Aquasocius for your property?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/contact">Request Specifications</Button>
-              <Button href="/contact" variant="secondary">Schedule Site Assessment</Button>
+              <Button href="/contact/">Request Specifications</Button>
+              <Button href="/contact/" variant="secondary">Schedule Site Assessment</Button>
             </div>
           </div>
         </ScrollReveal>

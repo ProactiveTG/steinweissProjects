@@ -10,6 +10,18 @@ const buildingTypes = [
   "Other",
 ];
 
+const baseInputStyle: React.CSSProperties = {
+  backgroundColor: "var(--surface)",
+  border: "1px solid rgba(255,255,255,0.1)",
+  transition: "border-color 0.2s, box-shadow 0.2s",
+};
+
+const focusInputStyle: React.CSSProperties = {
+  ...baseInputStyle,
+  borderColor: "rgba(0,212,255,0.4)",
+  boxShadow: "0 0 0 2px rgba(0,212,255,0.3)",
+};
+
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -19,24 +31,19 @@ export default function ContactForm() {
     units: "",
     message: "",
   });
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Wire up form submission (Formspree, Supabase, or API route)
     setSubmitted(true);
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-btn text-white placeholder-[rgba(148,163,184,0.5)] text-sm focus:outline-none transition-colors duration-200";
-  const inputStyle = {
-    backgroundColor: "var(--surface)",
-    border: "1px solid rgba(255,255,255,0.1)",
-  };
-  const focusStyle = (field: string) =>
-    formData[field as keyof typeof formData]
-      ? { ...inputStyle, borderColor: "rgba(0,212,255,0.4)" }
-      : inputStyle;
+    "w-full px-4 py-3 rounded-btn text-white placeholder-[rgba(148,163,184,0.5)] text-sm focus:outline-none";
+
+  const getStyle = (field: string) =>
+    focusedField === field ? focusInputStyle : baseInputStyle;
 
   if (submitted) {
     return (
@@ -64,9 +71,11 @@ export default function ContactForm() {
             required
             placeholder="Your name"
             className={inputClass}
-            style={focusStyle("name")}
+            style={getStyle("name")}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onFocus={() => setFocusedField("name")}
+            onBlur={() => setFocusedField(null)}
           />
         </div>
         <div>
@@ -78,9 +87,11 @@ export default function ContactForm() {
             required
             placeholder="you@company.com"
             className={inputClass}
-            style={focusStyle("email")}
+            style={getStyle("email")}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onFocus={() => setFocusedField("email")}
+            onBlur={() => setFocusedField(null)}
           />
         </div>
       </div>
@@ -92,9 +103,11 @@ export default function ContactForm() {
           type="text"
           placeholder="Company or property name"
           className={inputClass}
-          style={focusStyle("company")}
+          style={getStyle("company")}
           value={formData.company}
           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+          onFocus={() => setFocusedField("company")}
+          onBlur={() => setFocusedField(null)}
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -104,9 +117,11 @@ export default function ContactForm() {
           </label>
           <select
             className={inputClass}
-            style={inputStyle}
+            style={getStyle("buildingType")}
             value={formData.buildingType}
             onChange={(e) => setFormData({ ...formData, buildingType: e.target.value })}
+            onFocus={() => setFocusedField("buildingType")}
+            onBlur={() => setFocusedField(null)}
           >
             <option value="" style={{ backgroundColor: "var(--surface)" }}>Select type</option>
             {buildingTypes.map((t) => (
@@ -122,9 +137,11 @@ export default function ContactForm() {
             type="text"
             placeholder="e.g. 250"
             className={inputClass}
-            style={focusStyle("units")}
+            style={getStyle("units")}
             value={formData.units}
             onChange={(e) => setFormData({ ...formData, units: e.target.value })}
+            onFocus={() => setFocusedField("units")}
+            onBlur={() => setFocusedField(null)}
           />
         </div>
       </div>
@@ -136,9 +153,11 @@ export default function ContactForm() {
           rows={5}
           placeholder="Tell us about your property and water needs"
           className={`${inputClass} resize-none`}
-          style={inputStyle}
+          style={getStyle("message")}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onFocus={() => setFocusedField("message")}
+          onBlur={() => setFocusedField(null)}
         />
       </div>
       <button

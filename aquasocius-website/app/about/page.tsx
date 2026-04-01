@@ -3,6 +3,7 @@ import Section from "@/components/ui/Section";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import FlagUS from "@/components/icons/FlagUS";
 import FlagCH from "@/components/icons/FlagCH";
+import VortexLogo from "@/components/brand/VortexLogo";
 
 export const metadata: Metadata = {
   title: "About",
@@ -10,24 +11,27 @@ export const metadata: Metadata = {
 };
 
 const teamPlaceholders = [
-  { name: "Founder", title: "Co-Founder & CEO" },
-  { name: "Founder", title: "Co-Founder & CTO" },
-  { name: "Founder", title: "Co-Founder & COO" },
-  { name: "Advisor", title: "Technical Advisor" },
+  { name: "Founder", title: "Co-Founder & CEO",   initials: "CF", gradient: "linear-gradient(135deg, #00D4FF, #7B61FF)" },
+  { name: "Founder", title: "Co-Founder & CTO",   initials: "CT", gradient: "linear-gradient(135deg, #7B61FF, #00D4FF)" },
+  { name: "Founder", title: "Co-Founder & COO",   initials: "CO", gradient: "linear-gradient(135deg, #00D4FF 20%, #7B61FF 80%)" },
+  { name: "Advisor", title: "Technical Advisor",  initials: "TA", gradient: "linear-gradient(135deg, rgba(0,212,255,0.6), rgba(123,97,255,0.6))" },
 ];
 
 const principles = [
   {
     title: "Engineering First",
     desc: "Every decision starts with the physics. If the science doesn't support it, we don't ship it.",
+    color: "#00D4FF",
   },
   {
     title: "Zero Compromise",
     desc: "No chemicals means no chemicals. Not 'reduced chemicals.' Not 'minimal chemicals.' Zero.",
+    color: "#7B61FF",
   },
   {
     title: "Built to Last",
     desc: "Our systems are designed for decades of continuous operation. We engineer for permanence, not planned obsolescence.",
+    color: "#00D4FF",
   },
 ];
 
@@ -47,17 +51,23 @@ export default function AboutPage() {
         />
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" threshold={0.1}>
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-4"
-              style={{ color: "var(--secondary)" }}
-            >
-              Our Story
-            </p>
-            <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+            <div style={{ marginBottom: "1.5rem" }}>
+              <VortexLogo size={40} animate />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(123,97,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Our Story
+              </span>
+            </div>
+            <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
               Born Between<br />
               <span className="gradient-text-animated">Two Cities</span>
             </h1>
-            <p className="text-lg max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-lg max-w-2xl" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               Aquasocius was founded by engineers and entrepreneurs who believed water purification deserved a fundamental rethink.
             </p>
           </ScrollReveal>
@@ -69,12 +79,18 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16 items-start">
           {/* Narrative — 3 cols */}
           <ScrollReveal direction="up" threshold={0.1} className="md:col-span-3">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-6"
-              style={{ color: "var(--secondary)" }}
-            >
-              The Founding
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                The Founding
+              </span>
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "2rem" }}>
+              A different way
+            </h2>
             <div className="flex flex-col gap-6">
               {[
                 "Aquasocius began with a simple observation: the water purification industry was stuck. Chemical treatment — a century-old approach — remained the default for commercial buildings, despite its costs, complexity, and health concerns.",
@@ -82,7 +98,7 @@ export default function AboutPage() {
                 "The result is a machine that purifies water using nothing but controlled vortex energy. No chemicals enter the water. No membranes need replacing. No UV bulbs burn out. Just physics, engineered to perfection.",
                 "Today, Aquasocius serves commercial, residential, and hospitality properties across the United States and mid-market Europe — delivering water quality that building owners proudly mention to their tenants.",
               ].map((para, i) => (
-                <p key={i} className="leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p key={i} className="leading-relaxed" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                   {para}
                 </p>
               ))}
@@ -123,22 +139,31 @@ export default function AboutPage() {
       <Section className="bg-surface">
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="text-center mb-12">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Principles
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Principles
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               What Drives Us
             </h2>
           </div>
         </ScrollReveal>
         <ScrollReveal direction="up" stagger={0.12} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {principles.map(({ title, desc }) => (
-            <div key={title} className="glass rounded-card p-8">
+          {principles.map(({ title, desc, color }) => (
+            <div
+              key={title}
+              className="glass rounded-card p-8 gradient-border-animated"
+              style={{ borderColor: "rgba(255,255,255,0.06)" }}
+            >
+              <div style={{ width: 4, height: 32, background: color, borderRadius: 2, marginBottom: "1.25rem" }} />
               <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
-              <p className="leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              <p className="leading-relaxed" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                 {desc}
               </p>
             </div>
@@ -150,16 +175,20 @@ export default function AboutPage() {
       <Section>
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="text-center mb-12">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              The Team
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                The Team
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "1rem" }}>
               Small team. Big ambition.
             </h2>
-            <p style={{ color: "var(--text-secondary)" }}>
+            <p style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               A focused group of engineers, entrepreneurs, and innovators.
             </p>
           </div>
@@ -168,17 +197,21 @@ export default function AboutPage() {
           {teamPlaceholders.map((member, i) => (
             <div key={i} className="glass rounded-card p-6 text-center">
               <div
-                className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
+                className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center relative"
                 style={{
-                  background: "linear-gradient(135deg, rgba(0,212,255,0.15), rgba(123,97,255,0.15))",
-                  border: "1px solid rgba(0,212,255,0.15)",
+                  background: member.gradient,
+                  boxShadow: "0 0 24px rgba(0,212,255,0.2)",
                 }}
               >
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: "rgba(10,22,40,0.3)" }}
+                />
                 <span
-                  className="text-2xl font-bold"
-                  style={{ color: "var(--secondary)" }}
+                  className="relative text-xl font-bold"
+                  style={{ color: "#fff", letterSpacing: "-0.02em" }}
                 >
-                  {member.name[0]}
+                  {member.initials}
                 </span>
               </div>
               <p className="font-semibold text-white text-sm mb-1">{member.name}</p>
@@ -203,13 +236,17 @@ export default function AboutPage() {
               border: "1px solid rgba(0,212,255,0.15)",
             }}
           >
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-6"
-              style={{ color: "var(--secondary)" }}
-            >
-              Mission
-            </p>
-            <p className="text-2xl md:text-3xl font-bold text-white max-w-3xl mx-auto leading-tight">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Mission
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <p style={{ fontSize: "clamp(1.5rem, 3vw, 2.2rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, maxWidth: "3xl", margin: "0 auto" }}>
               &ldquo;To make chemical-free water purification the global standard for premium buildings.&rdquo;
             </p>
           </div>

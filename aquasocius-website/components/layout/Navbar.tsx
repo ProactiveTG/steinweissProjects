@@ -1,74 +1,113 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import LogoFull from "@/components/brand/LogoFull";
 
 const navLinks = [
-  { href: "/technology", label: "Technology" },
-  { href: "/product",    label: "Product"    },
-  { href: "/markets",    label: "Markets"    },
-  { href: "/about",      label: "About"      },
-  { href: "/contact",    label: "Contact"    },
+  { href: "/technology/", label: "Technology" },
+  { href: "/product/",    label: "Product"    },
+  { href: "/markets/",    label: "Markets"    },
+  { href: "/about/",      label: "About"      },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
-      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-xl font-bold tracking-tight text-white group-hover:gradient-text transition-all duration-300">
-            Aquasocius
-          </span>
+    <header
+      style={{
+        position: "fixed",
+        top: 0, left: 0, right: 0,
+        zIndex: 100,
+        transition: "background 0.3s, backdrop-filter 0.3s, border-color 0.3s",
+        background: scrolled ? "rgba(10,22,40,0.85)" : "transparent",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+      }}
+    >
+      <nav style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <LogoFull size="sm" />
         </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-8">
-          {navLinks.map(({ href, label }) => (
-            <li key={href}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }} className="hidden md:flex">
+          {navLinks.map(({ href, label }) => {
+            const active = pathname === href || pathname.startsWith(href);
+            return (
               <Link
+                key={href}
                 href={href}
-                className={`relative text-sm font-medium transition-colors duration-200 hover:text-[#00D4FF] ${
-                  pathname === href ? "text-[#00D4FF]" : "text-[#94A3B8]"
-                }`}
+                style={{
+                  position: "relative",
+                  padding: "0.5rem 0.875rem",
+                  borderRadius: 8,
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: active ? "#fff" : "var(--text-secondary)",
+                  textDecoration: "none",
+                  transition: "color 0.15s",
+                }}
               >
                 {label}
-                {pathname === href && (
+                {active && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-[#00D4FF]"
+                    style={{
+                      position: "absolute",
+                      bottom: 4, left: "0.875rem", right: "0.875rem",
+                      height: 2,
+                      background: "var(--gradient-water)",
+                      borderRadius: 1,
+                    }}
                   />
                 )}
               </Link>
-            </li>
-          ))}
-        </ul>
+            );
+          })}
+        </div>
 
-        {/* CTA */}
-        <div className="hidden md:block">
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <Link
-            href="/contact"
-            className="px-5 py-2 rounded-btn text-sm font-semibold bg-gradient-water text-white hover:opacity-90 hover:scale-[1.02] transition-all duration-200 shadow-glow"
+            href="/contact/"
+            style={{
+              position: "relative",
+              overflow: "hidden",
+              padding: "0.5rem 1.25rem",
+              borderRadius: 8,
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              background: "linear-gradient(135deg, #00D4FF, #7B61FF)",
+              color: "#fff",
+              textDecoration: "none",
+            }}
+            className="hidden md:block btn-shimmer"
           >
             Get a Demo
           </Link>
-        </div>
 
-        {/* Mobile menu toggle */}
-        <button
-          className="md:hidden text-white p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-5 h-0.5 bg-white mb-1 transition-all" />
-          <div className="w-5 h-0.5 bg-white mb-1 transition-all" />
-          <div className="w-5 h-0.5 bg-white transition-all" />
-        </button>
+          <button
+            className="md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{ background: "transparent", border: "none", color: "#fff", cursor: "pointer", padding: "0.5rem" }}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
@@ -78,30 +117,18 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass border-t border-white/5"
+            style={{ background: "rgba(10,22,40,0.97)", borderTop: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}
           >
-            <ul className="px-6 py-4 flex flex-col gap-4">
+            <div style={{ padding: "1rem 1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {navLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    onClick={() => setMenuOpen(false)}
-                    className="text-[#94A3B8] hover:text-white transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link
-                  href="/contact"
-                  onClick={() => setMenuOpen(false)}
-                  className="inline-block px-5 py-2 rounded-btn text-sm font-semibold bg-gradient-water text-white"
-                >
-                  Get a Demo
+                <Link key={href} href={href} onClick={() => setMenuOpen(false)} style={{ padding: "0.75rem 0", fontSize: "1rem", color: "var(--text-secondary)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  {label}
                 </Link>
-              </li>
-            </ul>
+              ))}
+              <Link href="/contact/" onClick={() => setMenuOpen(false)} style={{ marginTop: "0.5rem", padding: "0.875rem", textAlign: "center", background: "linear-gradient(135deg, #00D4FF, #7B61FF)", borderRadius: 8, color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+                Get a Demo
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

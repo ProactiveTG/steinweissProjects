@@ -4,6 +4,7 @@ import ScrollReveal from "@/components/effects/ScrollReveal";
 import ContactForm from "@/components/sections/ContactForm";
 import FlagUS from "@/components/icons/FlagUS";
 import FlagCH from "@/components/icons/FlagCH";
+import VortexLogo from "@/components/brand/VortexLogo";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -26,17 +27,23 @@ export default function ContactPage() {
         />
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" threshold={0.1}>
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-4"
-              style={{ color: "var(--secondary)" }}
-            >
-              Get in Touch
-            </p>
-            <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+            <div style={{ marginBottom: "1.5rem" }}>
+              <VortexLogo size={40} animate />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Get in Touch
+              </span>
+            </div>
+            <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
               Let&rsquo;s Talk About<br />
               <span className="gradient-text-animated">Your Water</span>
             </h1>
-            <p className="text-lg max-w-xl" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-lg max-w-xl" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               Whether you&rsquo;re exploring options or ready to spec a system, we&rsquo;d love to hear from you.
             </p>
           </ScrollReveal>
@@ -92,7 +99,7 @@ export default function ContactPage() {
 
             {/* Book a call */}
             <div
-              className="glass rounded-card p-6"
+              className="glass rounded-card p-6 gradient-border-animated"
               style={{ borderColor: "rgba(0,212,255,0.1)" }}
             >
               <p className="font-semibold text-white mb-2">
@@ -101,7 +108,6 @@ export default function ContactPage() {
               <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
                 Book a 30-minute call with our team to discuss your property.
               </p>
-              {/* TODO: Replace href with Calendly embed URL when available */}
               <a
                 href="#"
                 className="inline-flex items-center justify-center w-full py-3 rounded-btn text-sm font-semibold border transition-all duration-200"

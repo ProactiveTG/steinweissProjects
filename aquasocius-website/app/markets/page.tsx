@@ -17,7 +17,14 @@ const segments = [
     label: "Commercial Properties",
     headline: "Protect Your Assets. Reduce Operating Costs.",
     Icon: BuildingIcon,
-    painPoints: "Rising chemical treatment costs. Aging water infrastructure. Regulatory compliance pressure. Tenant health expectations.",
+    iconGradient: "linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(10,22,40,0.9) 100%)",
+    iconAccent: "#00D4FF",
+    painPoints: [
+      "Rising chemical treatment costs",
+      "Aging water infrastructure",
+      "Regulatory compliance pressure",
+      "Tenant health expectations",
+    ],
     valueProps: [
       "40% average reduction in water treatment costs",
       "Zero chemical storage requirements",
@@ -30,7 +37,13 @@ const segments = [
     label: "Residential Buildings",
     headline: "The Water Quality Residents Deserve",
     Icon: HighRiseIcon,
-    painPoints: "Hard water complaints. Inconsistent quality across floors. Chemical treatment concerns from health-conscious residents.",
+    iconGradient: "linear-gradient(135deg, rgba(123,97,255,0.15) 0%, rgba(10,22,40,0.9) 100%)",
+    iconAccent: "#7B61FF",
+    painPoints: [
+      "Hard water complaints",
+      "Inconsistent quality across floors",
+      "Chemical treatment concerns from health-conscious residents",
+    ],
     valueProps: [
       "Consistent purity from penthouse to lobby",
       "Chemical-free — a selling point for health-conscious tenants",
@@ -43,7 +56,13 @@ const segments = [
     label: "Hospitality Properties",
     headline: "A Guest Experience That Starts with Water",
     Icon: HotelIcon,
-    painPoints: "Guest expectations for premium amenities. Brand reputation tied to facility quality. High water volume across rooms, kitchens, pools, and spa.",
+    iconGradient: "linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(123,97,255,0.1) 50%, rgba(10,22,40,0.95) 100%)",
+    iconAccent: "#00D4FF",
+    painPoints: [
+      "Guest expectations for premium amenities",
+      "Brand reputation tied to facility quality",
+      "High water volume across rooms, kitchens, pools, and spa",
+    ],
     valueProps: [
       "Luxury water quality in every room",
       "Spa and pool systems without harsh chemicals",
@@ -69,17 +88,20 @@ export default function MarketsPage() {
         />
         <div className="max-w-7xl mx-auto">
           <ScrollReveal direction="up" threshold={0.1}>
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-4"
-              style={{ color: "var(--secondary)" }}
-            >
-              Solutions
-            </p>
-            <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Solutions
+              </span>
+            </div>
+            <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
               Purpose-Built for<br />
               <span className="gradient-text-animated">Premium Properties</span>
             </h1>
-            <p className="text-lg max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-lg max-w-2xl" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               Aquasocius serves the buildings where water quality is non-negotiable.
             </p>
           </ScrollReveal>
@@ -87,7 +109,7 @@ export default function MarketsPage() {
       </section>
 
       {/* Segments */}
-      {segments.map(({ id, label, headline, Icon, painPoints, valueProps, flip }, idx) => (
+      {segments.map(({ id, label, headline, Icon, iconGradient, iconAccent, painPoints, valueProps, flip }, idx) => (
         <section
           key={id}
           className="py-20 md:py-28 px-6"
@@ -101,36 +123,62 @@ export default function MarketsPage() {
                   className="rounded-card flex flex-col items-center justify-center"
                   style={{
                     aspectRatio: "4/3",
-                    background: "linear-gradient(135deg, rgba(15,29,47,0.9), rgba(0,212,255,0.04))",
-                    border: "1px solid rgba(0,212,255,0.1)",
+                    background: iconGradient,
+                    border: `1px solid ${iconAccent}22`,
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
-                  <div style={{ color: "rgba(0,212,255,0.25)" }}>
+                  <div style={{ color: iconAccent, opacity: 0.25 }}>
                     <Icon className="w-24 h-24" />
                   </div>
+                  {/* Decorative circles */}
+                  {[100, 160, 220].map((size, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        position: "absolute",
+                        width: size, height: size,
+                        borderRadius: "50%",
+                        border: `1px solid ${iconAccent}`,
+                        opacity: 0.04 + (i * 0.02),
+                        top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  ))}
                 </div>
               </ScrollReveal>
 
               {/* Content */}
               <ScrollReveal direction={flip ? "left" : "right"} delay={0.1} threshold={0.1} className={flip ? "md:order-1" : ""}>
-                <p
-                  className="text-xs font-semibold uppercase tracking-widest mb-3"
-                  style={{ color: "var(--secondary)" }}
-                >
-                  {label}
-                </p>
-                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-6">
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                  <div style={{ height: 1, background: `linear-gradient(to right, transparent, ${iconAccent}60)`, width: 48 }} />
+                  <span
+                    className="text-xs font-semibold uppercase tracking-widest"
+                    style={{ color: iconAccent }}
+                  >
+                    {label}
+                  </span>
+                </div>
+                <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "1.5rem" }}>
                   {headline}
                 </h2>
 
                 {/* Pain points */}
                 <div
                   className="mb-8 pl-4 py-3"
-                  style={{ borderLeft: "2px solid rgba(0,212,255,0.3)" }}
+                  style={{ borderLeft: `2px solid ${iconAccent}40` }}
                 >
-                  <p className="text-sm italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                    {painPoints}
-                  </p>
+                  <ul className="flex flex-col gap-1.5">
+                    {painPoints.map((point) => (
+                      <li key={point} className="flex items-start gap-2 text-sm italic" style={{ color: "var(--text-secondary)" }}>
+                        <span style={{ color: iconAccent, opacity: 0.6, flexShrink: 0, marginTop: "0.1rem" }}>—</span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 {/* Value props */}
@@ -139,14 +187,14 @@ export default function MarketsPage() {
                     <li key={vp} className="flex items-start gap-3">
                       <span
                         className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: "var(--secondary)" }}
+                        style={{ backgroundColor: iconAccent }}
                       />
                       <span className="text-sm text-white">{vp}</span>
                     </li>
                   ))}
                 </ul>
 
-                <Button href="/contact" variant="secondary">
+                <Button href="/contact/" variant="secondary">
                   Learn More →
                 </Button>
               </ScrollReveal>
@@ -159,10 +207,20 @@ export default function MarketsPage() {
       <Section>
         <ScrollReveal direction="up" threshold={0.2}>
           <div className="text-center">
-            <p className="text-2xl md:text-3xl font-bold text-white mb-6">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Get Started
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <p style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1.5rem" }}>
               Which property type is yours?
             </p>
-            <Button href="/contact">
+            <Button href="/contact/">
               Tell Us About Your Building →
             </Button>
           </div>

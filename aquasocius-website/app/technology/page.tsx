@@ -3,6 +3,7 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import CavitationDiagram from "@/components/diagrams/CavitationDiagramWrapper";
+import VortexLogo from "@/components/brand/VortexLogo";
 
 export const metadata: Metadata = {
   title: "Technology",
@@ -82,17 +83,23 @@ export default function TechnologyPage() {
         <div className="max-w-7xl mx-auto w-full">
           <ScrollReveal direction="up" threshold={0.1}>
             <div className="max-w-3xl mb-16">
-              <p
-                className="text-xs font-semibold uppercase tracking-widest mb-4"
-                style={{ color: "var(--secondary)" }}
-              >
-                The Science
-              </p>
-              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+              <div style={{ marginBottom: "1.5rem" }}>
+                <VortexLogo size={40} animate />
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+                <span
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "var(--secondary)" }}
+                >
+                  The Science
+                </span>
+              </div>
+              <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
                 Hydrodynamic<br />
                 <span className="gradient-text-animated">Cavitation</span>
               </h1>
-              <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-lg" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                 A physics-based purification process that eliminates contaminants through controlled vortex energy — no chemicals, no filters, no compromise.
               </p>
             </div>
@@ -117,13 +124,16 @@ export default function TechnologyPage() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16 items-start">
           {/* Text — 3 cols */}
           <ScrollReveal direction="up" className="md:col-span-3">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-6"
-              style={{ color: "var(--secondary)" }}
-            >
-              What Is Cavitation
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                What Is Cavitation
+              </span>
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "2rem" }}>
               The physics of<br />pure water
             </h2>
             <div className="flex flex-col gap-5">
@@ -133,7 +143,7 @@ export default function TechnologyPage() {
                 "At this scale, the energy released is sufficient to rupture cell walls, destroy bacterial membranes, and break down organic contaminants at the molecular level. The process is purely mechanical — no chemical additives enter the water at any stage.",
                 "The result is water of extraordinary purity. So pure, in fact, that essential minerals must be reintroduced post-treatment to achieve optimal composition for drinking and building system compatibility.",
               ].map((para, i) => (
-                <p key={i} className="leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p key={i} className="leading-relaxed" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                   {para}
                 </p>
               ))}
@@ -149,10 +159,10 @@ export default function TechnologyPage() {
             ].map(({ stat, label }) => (
               <div
                 key={stat}
-                className="glass rounded-card p-6"
+                className="glass rounded-card p-6 gradient-border-animated"
                 style={{ borderColor: "rgba(0,212,255,0.1)" }}
               >
-                <p className="text-3xl font-bold gradient-text mb-2">{stat}</p>
+                <p style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1 }} className="gradient-text mb-2">{stat}</p>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{label}</p>
               </div>
             ))}
@@ -164,13 +174,17 @@ export default function TechnologyPage() {
       <Section className="bg-surface">
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="text-center mb-10">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              The Process
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                The Process
+              </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 80 }} />
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               Three zones. One transformation.
             </h2>
           </div>
@@ -197,13 +211,16 @@ export default function TechnologyPage() {
       <Section>
         <ScrollReveal direction="up" threshold={0.1}>
           <div className="mb-10">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--secondary)" }}
-            >
-              Comparison
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--secondary)" }}
+              >
+                Comparison
+              </span>
+            </div>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               How Aquasocius compares
             </h2>
           </div>
@@ -224,7 +241,8 @@ export default function TechnologyPage() {
                     style={{
                       color: "var(--secondary)",
                       borderLeft: "2px solid rgba(0,212,255,0.3)",
-                      backgroundColor: "rgba(0,212,255,0.03)",
+                      borderTop: "2px solid rgba(0,212,255,0.3)",
+                      backgroundColor: "rgba(0,212,255,0.06)",
                     }}
                   >
                     Aquasocius
@@ -274,10 +292,10 @@ export default function TechnologyPage() {
       <Section className="bg-surface">
         <ScrollReveal direction="up" threshold={0.2}>
           <div className="text-center">
-            <p className="text-2xl md:text-3xl font-bold text-white mb-6">
+            <p style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1.5rem" }}>
               See the machine that makes it possible
             </p>
-            <Button href="/product">
+            <Button href="/product/">
               Explore the Product →
             </Button>
           </div>
