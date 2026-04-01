@@ -1,21 +1,43 @@
-# steinweiss Projects
+# Steinweiss Projects
 
-Master monorepo for all steinweiss-managed projects.
+A monorepo containing four web projects built on Next.js with Tailwind CSS v4.
 
 ## Projects
 
-### Aquasocius
+| Project | Description | Stack | URL |
+|---------|-------------|-------|-----|
+| `aquasocius-website` | Marketing site for Aquasocius water purification | Next.js, GSAP, Framer Motion, Three.js | / |
+| `aquasocius-command` | Internal fleet ops dashboard | Next.js, Recharts, Lucide React | /command |
+| `aquasocius-portal` | Client-facing property portal | Next.js, Recharts, Framer Motion | /portal |
+| `global-utility-monitoring` | Rusk valve monitoring — marketing + admin + portal | Next.js, Recharts, Framer Motion | /rusk |
 
-| App | URL | Stack | Hosting |
-|-----|-----|-------|---------|
-| [aquasocius-website](./aquasocius-website/) | aquasocius.com | Next.js | Netlify |
-| [aquasocius-command](./aquasocius-command/) | command.aquasocius.com | React/Next.js | TBD |
-| [aquasocius-portal](./aquasocius-portal/) | portal.aquasocius.com | React/Next.js | TBD |
+## Tech Stack
 
-### Global Utility Monitoring (Rusk/ProSentry)
+- **Framework:** Next.js 16 (App Router, static export)
+- **Styling:** Tailwind CSS v4 (CSS-first config, no `tailwind.config.ts`)
+- **Animations:** Framer Motion, GSAP
+- **Charts:** Recharts
+- **Icons:** Lucide React
+- **3D:** React Three Fiber (aquasocius-website only)
+- **Smooth Scroll:** Lenis (aquasocius-website only)
+- **Deployment:** GitHub Pages via GitHub Actions
 
-| App | URL | Stack | Hosting |
-|-----|-----|-------|---------|
-| [website](./global-utility-monitoring/website/) | globalutilitymonitoring.com | TBD | TBD |
-| [admin](./global-utility-monitoring/admin/) | admin.globalutilitymonitoring.com | TBD | TBD |
-| [portal](./global-utility-monitoring/portal/) | portal.globalutilitymonitoring.com | TBD | TBD |
+## Structure
+
+```
+steinweissProjects/
+├── aquasocius-website/    # Project 1 — Marketing site
+├── aquasocius-command/    # Project 2 — Internal dashboard
+├── aquasocius-portal/     # Project 3 — Client portal
+└── global-utility-monitoring/  # Project 4 — Rusk platform
+```
+
+## Development
+
+Each project is a standalone Next.js app. To run locally:
+
+```bash
+cd <project-name>
+npm install
+npm run dev
+```
