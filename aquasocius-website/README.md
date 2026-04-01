@@ -4,4 +4,4 @@ Marketing site for Aquasocius.
 
 - **URL:** aquasocius.com
 - **Stack:** Next.js
-- **Hosting:** Netlify
+- **Hosting:** GitHub Pages
