@@ -122,4 +122,9 @@ body {
   .bg-surface {
     background-color: var(--surface);
   }
+
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
 }
