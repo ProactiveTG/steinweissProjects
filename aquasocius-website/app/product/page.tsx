@@ -36,10 +36,10 @@ export default function ProductPage() {
               "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(0,212,255,0.08) 0%, transparent 70%)",
           }}
         />
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full text-center">
           <ScrollReveal direction="up" threshold={0.1}>
-            <div className="max-w-3xl mb-16">
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+            <div className="mb-16">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
                 <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
                 <span
                   className="text-xs font-semibold uppercase tracking-widest"
@@ -47,12 +47,13 @@ export default function ProductPage() {
                 >
                   The Machine
                 </span>
+                <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 60 }} />
               </div>
               <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
                 Engineered for<br />
                 <span className="gradient-text-animated">Scale</span>
               </h1>
-              <p className="text-lg" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
+              <p className="text-lg max-w-xl mx-auto" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
                 A modular cavitation system designed for seamless integration into commercial, residential, and hospitality water infrastructure.
               </p>
             </div>
@@ -83,30 +84,43 @@ export default function ProductPage() {
           </div>
         </ScrollReveal>
 
-        <ScrollReveal direction="up" delay={0.1} stagger={0.06} className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          {specs.map(({ label, value, icon: Icon }) => (
-            <div
-              key={label}
-              className="flex items-center justify-between py-4 px-2"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="flex items-center gap-3">
-                <Icon size={14} style={{ color: "var(--secondary)", opacity: 0.6, flexShrink: 0 }} />
-                <span
-                  className="text-sm uppercase tracking-wider"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--text-secondary)" }}
-                >
-                  {label}
+        <ScrollReveal direction="up" delay={0.1} threshold={0.1}>
+          <div className="max-w-2xl mx-auto glass rounded-card overflow-hidden">
+            {specs.map(({ label, value, icon: Icon }, i) => (
+              <div
+                key={label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "1rem 1.5rem",
+                  borderBottom: i < specs.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <Icon size={14} style={{ color: "var(--secondary)", opacity: 0.65, flexShrink: 0 }} />
+                  <span style={{
+                    fontSize: "0.78rem",
+                    fontFamily: "var(--font-jetbrains-mono, monospace)",
+                    color: "var(--text-secondary)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                  }}>
+                    {label}
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: "0.95rem",
+                  fontWeight: 600,
+                  fontFamily: "var(--font-jetbrains-mono, monospace)",
+                  color: "#fff",
+                  textAlign: "right",
+                }}>
+                  {value}
                 </span>
               </div>
-              <span
-                className="text-base font-semibold text-white"
-                style={{ fontFamily: "var(--font-mono, monospace)" }}
-              >
-                {value}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </ScrollReveal>
       </Section>
 

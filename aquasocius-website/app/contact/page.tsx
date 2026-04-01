@@ -25,12 +25,12 @@ export default function ContactPage() {
             background: "radial-gradient(ellipse 70% 50% at 50% 40%, rgba(0,212,255,0.07) 0%, transparent 70%)",
           }}
         />
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full text-center">
           <ScrollReveal direction="up" threshold={0.1}>
-            <div style={{ marginBottom: "1.5rem" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
               <VortexLogo size={40} animate />
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
               <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
               <span
                 className="text-xs font-semibold uppercase tracking-widest"
@@ -38,12 +38,13 @@ export default function ContactPage() {
               >
                 Get in Touch
               </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 60 }} />
             </div>
             <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
               Let&rsquo;s Talk About<br />
               <span className="gradient-text-animated">Your Water</span>
             </h1>
-            <p className="text-lg max-w-xl" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
+            <p className="text-lg max-w-xl mx-auto" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               Whether you&rsquo;re exploring options or ready to spec a system, we&rsquo;d love to hear from you.
             </p>
           </ScrollReveal>

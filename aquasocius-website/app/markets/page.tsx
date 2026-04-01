@@ -86,9 +86,9 @@ export default function MarketsPage() {
             background: "radial-gradient(ellipse 70% 50% at 50% 40%, rgba(0,212,255,0.07) 0%, transparent 70%)",
           }}
         />
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full text-center">
           <ScrollReveal direction="up" threshold={0.1}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
               <div style={{ height: 1, background: "linear-gradient(to right, transparent, rgba(0,212,255,0.4))", width: 60 }} />
               <span
                 className="text-xs font-semibold uppercase tracking-widest"
@@ -96,12 +96,13 @@ export default function MarketsPage() {
               >
                 Solutions
               </span>
+              <div style={{ height: 1, background: "linear-gradient(to left, transparent, rgba(0,212,255,0.4))", width: 60 }} />
             </div>
             <h1 style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05, marginBottom: "1.5rem" }}>
               Purpose-Built for<br />
               <span className="gradient-text-animated">Premium Properties</span>
             </h1>
-            <p className="text-lg max-w-2xl" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
+            <p className="text-lg max-w-xl mx-auto" style={{ color: "var(--text-secondary)", fontWeight: 300 }}>
               Aquasocius serves the buildings where water quality is non-negotiable.
             </p>
           </ScrollReveal>
