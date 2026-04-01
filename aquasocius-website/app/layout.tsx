@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SmoothScroll from "@/components/effects/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,9 +46,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <SmoothScroll>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

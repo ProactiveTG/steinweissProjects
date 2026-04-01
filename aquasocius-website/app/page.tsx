@@ -1,38 +1,97 @@
+"use client";
+
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Section from "@/components/ui/Section";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
+const ParticleField = dynamic(() => import("@/components/effects/ParticleField"), { ssr: false });
+
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, delay, ease: EASE_OUT_EXPO },
+});
+
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center bg-primary overflow-hidden pt-16">
-        {/* TODO: React Three Fiber vortex scene */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628] via-[#0A1628]/80 to-[#0A1628]" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16" style={{ backgroundColor: "var(--primary)" }}>
+
+        {/* Particle field */}
+        <ParticleField />
+
+        {/* Radial glow behind headline */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 70% 50% at 50% 50%, rgba(0,212,255,0.10) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Dark vignette edges */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 120% 100% at 50% 50%, transparent 40%, rgba(10,22,40,0.85) 100%)",
+          }}
+        />
+
+        {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00D4FF] mb-6">
+          <motion.p
+            {...fadeUp(0.2)}
+            className="text-xs font-semibold uppercase tracking-widest text-[#00D4FF] mb-6"
+          >
             Hydrodynamic Cavitation Technology
-          </p>
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-[1.05] mb-6">
+          </motion.p>
+
+          <motion.h1
+            {...fadeUp(0.4)}
+            className="text-5xl md:text-7xl font-bold text-white leading-[1.05] mb-6"
+          >
             Pure Water.
             <br />
-            <span className="gradient-text">Zero Chemicals.</span>
-          </h1>
-          <p className="text-lg md:text-xl text-[#94A3B8] mb-10 max-w-2xl mx-auto">
+            <span className="gradient-text-animated">Zero Chemicals.</span>
+          </motion.h1>
+
+          <motion.p
+            {...fadeUp(0.6)}
+            className="text-lg md:text-xl text-[#94A3B8] mb-10 max-w-2xl mx-auto"
+          >
             A vortex-powered purification system engineered between Zürich and New York.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          </motion.p>
+
+          <motion.div
+            {...fadeUp(0.8)}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
             <Button href="/product">See the Machine</Button>
             <Button href="/technology" variant="secondary">How It Works</Button>
-          </div>
+          </motion.div>
         </div>
+
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-pill border-2 border-white/20 flex items-start justify-center pt-2">
-            <div className="w-1 h-2 bg-[#00D4FF] rounded-full" />
-          </div>
-        </div>
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 1 }}
+        >
+          <motion.div
+            animate={{ opacity: [0.3, 1, 0.3], y: [0, 6, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-1.5"
+          >
+            <div className="w-px h-8 bg-gradient-to-b from-transparent to-[#00D4FF]/60" />
+            <div className="w-1 h-1 rounded-full bg-[#00D4FF]/80" />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Value Proposition */}
